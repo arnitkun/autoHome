@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var cors = require('cors');
 
 var indexRouter = require('./routes/index');
 var devicesRouter = require('./routes/devices');
@@ -10,6 +11,13 @@ var terminalRouter = require('./routes/terminal');
 
 var app = express();
 
+var corsMiddleware = function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*'); //replace localhost with actual host
+  res.header('Access-Control-Allow-Methods', 'OPTIONS, GET, PUT, PATCH, POST, DELETE');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, X-Requested-With, Authorization');
+
+  next();
+}
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -19,10 +27,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(corsMiddleware);
 
 app.use('/', indexRouter);
 app.use('/devices', devicesRouter);
 app.use('/terminal', terminalRouter);
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

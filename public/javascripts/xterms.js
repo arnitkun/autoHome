@@ -1,6 +1,7 @@
 
 var fromA = require('./a')
-// var listDevices = require('../utils/util');
+var devices = require('../utils/util');
+var testDeviceApi = require('../utils/test');
 var term = new Terminal({
     cursorBlink: "block"
 });
@@ -28,6 +29,21 @@ term.on('key', function(key, ev) {
             entries.push(curr_line);
             // console.log(curr_line);
             fromA.fromA(curr_line);
+            if(curr_line == "list devices") {
+                let deviceList = devices.listDevices();
+                deviceList.then( dlist => {
+                    console.log(dlist);
+                    term.write(dlist);
+                })
+            }
+            if(curr_line == "test") {
+                let status = testDeviceApi.testDeviceApi();
+                status.then( message => {
+                    console.log(message);
+                    term.write(message);
+                });
+            }
+            
 
             currPos = entries.length - 1;
             term.prompt();

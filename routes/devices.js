@@ -21,7 +21,8 @@ router.get('/list', function(req,res, next) {
 router.post('/add', function(req, res, next) {
   //should display name of new device
   let device_name = req.body.device_name;
-  res.send('New Device Added: ' + device_name);
+  res.header('Content-Type','application/json');
+  res.send({device_added:  device_name});
 });
 
 router.post('/remove', function(req,res, next) {
@@ -32,6 +33,7 @@ router.post('/remove', function(req,res, next) {
 router.put('/task',function(req,res,next) {
   let task = req.body.task;
   let device = req.body.device;
+  res.header('Content-Type','text/html');
   res.send(`${device} will ${task}`);
 });
 

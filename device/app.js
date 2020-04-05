@@ -7,7 +7,6 @@ var cors = require('cors');
 
 var indexRouter = require('./routes/index');
 var devicesRouter = require('./routes/devices');
-var terminalRouter = require('./routes/terminal');
 
 var app = express();
 
@@ -31,7 +30,7 @@ app.use(corsMiddleware);
 
 app.use('/', indexRouter);
 app.use('/devices', devicesRouter);
-app.use('/terminal', terminalRouter);
+
 
 
 

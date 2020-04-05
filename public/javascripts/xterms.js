@@ -85,8 +85,8 @@ function parse(command) {
 term.open(document.getElementById('terminal'));
 
 //the terminal prompt
-term.prompt = () => {
-    term.write('\n\r' + curr_line + '\r\n\u001b[32mautoHome> \u001b[37m');
+term.prompt = (message = "") => {
+    term.write('\n\r' + message + '\r\n\u001b[32mautoHome> \u001b[37m');
 };
 
 term.write('Welcome to Home automation!');
@@ -99,24 +99,7 @@ term.on('key', function(key, ev) {
     if (ev.keyCode === 13) { // Enter key
         if (curr_line.replace(/^\s+|\s+$/g, '').length != 0) { // Check if string is all whitespace
             entries.push(curr_line);
-            // console.log(curr_line);
-            fromA.fromA(curr_line);
-            if(curr_line == "list devices") {
-                let deviceList = devices.listDevices();
-                deviceList.then( dlist => {
-                    console.log(dlist);
-                    term.write(dlist);
-                })
-            }
-            if(curr_line == "test") {
-                let status = testDeviceApi.testDeviceApi();
-                status.then( message => {
-                    console.log(message);
-                    term.write(message);
-                });
-            }
-            
-
+            parse(curr_line);
             currPos = entries.length - 1;
             term.prompt();
         } else {

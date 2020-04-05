@@ -1,7 +1,10 @@
 
-var fromA = require('./a')
-var devices = require('../utils/util');
+var devices = require('./listDevice');
 var testDeviceApi = require('../utils/test');
+var addDeviceApi = require('./addDevice');
+var taskApi = require('./createTask');
+var removeDeviceApi = require('./removeDevice');
+
 var term = new Terminal({
     cursorBlink: "block"
 });
@@ -11,12 +14,81 @@ var entries = [];
 var currPos = 0;
 var pos = 0;
 
+/**
+ * Parses the command all calls the appropriate handler for the command
+ * @param {string} command command typed in the terminal
+ */
+function parse(command) {
+    command = command.toUpperCase();
+            if(command == "LIST DEVICES") {
+                let deviceList = devices.listDevices();
+                deviceList.then( dlist => {
+                    console.log(dlist);
+                    term.prompt(dlist);
+                })
+            }
+            if(command == "TEST") {
+                let status = testDeviceApi.testDeviceApi();
+                status.then( message => {
+                    console.log(message);
+                    term.prompt(message);
+                });
+            }
+            if(command.startsWith("ADD DEVICE")) {
+                let splittedCommand = command.split(" ");
+                // console.log("the device is "+splittedCommand[2].toLowerCase());
+                let deviceName = splittedCommand[2].toLowerCase();
+                let apiResponse = addDeviceApi.addDevice(deviceName);
+                apiResponse.then(res => {
+                        // console.log(message);
+                        if(res.status == "Success!") {
+                        let deviceAdded = res.device_added.toLowerCase();
+                        term.prompt(`Device added: ${deviceAdded}`);
+                        } 
+                        
+                        if(res.status == "Failure!"){
+                            term.prompt(`Can not add device: ${deviceName}, either it exists or the API is not running.`);
+                        }
+                    })
+            }
+            if(command.startsWith("TASK")) {
+                let splittedCommand = command.split(" ");
+                console.log("The device is: " + splittedCommand[1].toLowerCase() + " and the task is: " + splittedCommand[2].toLowerCase);
+                let device = splittedCommand[1].toLowerCase();
+                let task = splittedCommand[2].toLowerCase();
+                let status = taskApi.preformTask(device, task);
+                status.then( message => {
+                    console.log(message);
+                    term.prompt(message);
+                })
+            }
+            if(command.startsWith("REMOVE")) {
+                let splittedCommand = command.split(" ");
+                let deviceToRemove = splittedCommand[2].toLowerCase();
+                let apiResponse = removeDeviceApi.remove(deviceToRemove);
+                apiResponse.then(res => {
+                    console.log(res)
+                    if(res.status == "Success!") {
+                        let deviceRemoved = res.device_removed;
+                        term.prompt(`device_removed: ${deviceRemoved}`);
+                    } 
+                    if(res.status == "Failure!") {
+                        term.prompt(`Can not remove device: ${deviceToRemove}, either it does not exist or the API is not running.`)
+                    }
+                })
+
+            }
+}
 
 
+//initialize terminal in the browser
 term.open(document.getElementById('terminal'));
+
+//the terminal prompt
 term.prompt = () => {
     term.write('\n\r' + curr_line + '\r\n\u001b[32mautoHome> \u001b[37m');
 };
+
 term.write('Welcome to Home automation!');
 term.prompt();
 

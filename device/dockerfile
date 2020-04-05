@@ -6,7 +6,11 @@ COPY package*.json ./
 
 RUN npm install
 
-RUN  mkdir ./public/build
+RUN npm install browserify -g
+
+COPY . .
+
+RUN  mkdir public/build
 
 RUN browserify public/javascripts/listDevice.js --standalone listDevices > public/build/list.js
 
@@ -19,8 +23,6 @@ RUN browserify public/javascripts/removeDevice.js --standalone remove > public/b
 RUN browserify public/utils/test.js --standalone testDeviceApi > public/build/test.js
 
 RUN browserify public/javascripts/xterms.js > public/build/bundle.js
-
-COPY . .
 
 EXPOSE 3000
 

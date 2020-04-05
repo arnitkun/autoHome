@@ -76,7 +76,6 @@ function parse(command) {
                         term.prompt(`Can not remove device: ${deviceToRemove}, either it does not exist or the API is not running.`)
                     }
                 })
-
             }
 }
 
@@ -86,7 +85,7 @@ term.open(document.getElementById('terminal'));
 
 //the terminal prompt
 term.prompt = (message = "") => {
-    term.write('\n\r' + message + '\r\n\u001b[32mautoHome> \u001b[37m');
+    term.write('\r' + message + '\r\n\u001b[32mautoHome> \u001b[37m');
 };
 
 term.write('Welcome to Home automation!');

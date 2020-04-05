@@ -3,7 +3,7 @@ var fetch = require("node-fetch");
 
 function remove(name) {
     const remove_device_url = 'http://localhost:3000/devices/remove';
-    // console.log("removing " + name);
+    console.log("removing " + name);
     let reqOb = {"device": name}
     return fetch(remove_device_url, {method: 'POST', body: JSON.stringify(reqOb), headers: { 'Content-Type': 'application/json' } })
     .then(res => res.json())

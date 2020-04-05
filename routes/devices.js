@@ -17,7 +17,7 @@ function isAdded(device) {
 function isRemoved(device) {
   let index = devices.indexOf(device);
   if(index != -1) {
-    devices.splice(1, index);
+    devices.splice(index, 1);
     return true;
   } else {
     return false;
@@ -63,7 +63,7 @@ router.post('/remove', function(req,res, next) {
       device_removed: device_to_be_removed
     });
   } else {
-    res.send({ status: "Failure!", device_removed:  "None"});
+    res.send({ status: "Failure!", device_removed:  device_to_be_removed});
   }
 });
 

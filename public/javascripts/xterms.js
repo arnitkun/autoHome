@@ -15,8 +15,6 @@ var entries = [];
 var currPos = 0;
 var pos = 0;
 
-
-
 term.open(document.getElementById('terminal'));
 term.prompt = (message = "") => {
     term.write('\r' + message + '\n\r\u001b[32mautoHome> \u001b[37m');
@@ -39,7 +37,6 @@ term.on('key', function(key, ev) {
                 deviceList.then( dlist => {
                     console.log(dlist);
                     term.prompt(dlist);
-                    
                 })
             }
             if(curr_line_upper == "TEST") {
@@ -79,12 +76,12 @@ term.on('key', function(key, ev) {
             }
             if(curr_line_upper.startsWith("REMOVE")) {
                 let splittedCommand = curr_line_upper.split(" ");
-                let deviceToRemove = splittedCommand[1].toLowerCase();
+                let deviceToRemove = splittedCommand[2].toLowerCase();
                 let apiResponse = removeDeviceApi.remove(deviceToRemove);
                 apiResponse.then(res => {
                     console.log(res)
                     if(res.status == "Success!") {
-                        let deviceRemoved = message.device_removed;
+                        let deviceRemoved = res.device_removed;
                         term.prompt(`device_removed: ${deviceRemoved}`);
                     } 
                     if(res.status == "Failure!") {

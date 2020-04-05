@@ -2,6 +2,10 @@
 
 var devices = require('../utils/listDevice');
 var testDeviceApi = require('../utils/test');
+var addDeviceApi = require('../utils/addDevice');
+var taskApi = require('../utils/createTask');
+var removeDeviceApi = require('../utils/removeDevice')
+
 var term = new Terminal({
     cursorBlink: "block"
 });
@@ -14,8 +18,8 @@ var pos = 0;
 
 
 term.open(document.getElementById('terminal'));
-term.prompt = (apiResponse = "") => {
-    term.write('\r' + apiResponse + '\n\r\u001b[32mautoHome> \u001b[37m');
+term.prompt = (message = "") => {
+    term.write('\r' + message + '\n\r\u001b[32mautoHome> \u001b[37m');
 };
 
 term.write('Welcome to Home automation!');
@@ -29,30 +33,66 @@ term.on('key', function(key, ev) {
         if (curr_line.replace(/^\s+|\s+$/g, '').length != 0) { // Check if string is all whitespace
             entries.push(curr_line);
             // console.log(curr_line);
-            if(curr_line == "list devices") {
+            curr_line_upper = curr_line.toUpperCase();
+            if(curr_line_upper == "LIST DEVICES") {
                 let deviceList = devices.listDevices();
                 deviceList.then( dlist => {
                     console.log(dlist);
-                    term.promt(dlist);
+                    term.prompt(dlist);
                     
                 })
             }
-            if(curr_line == "test") {
+            if(curr_line_upper == "TEST") {
                 let status = testDeviceApi.testDeviceApi();
                 status.then( message => {
                     console.log(message);
                     term.prompt(message);
                 });
             }
-            if(curr_line == "add device") {
-                let deviceName = curr_line;
-                deviceList.then( dlist => {
-                    console.log(dlist);
-                    term.write(dlist);
+            if(curr_line_upper.startsWith("ADD DEVICE")) {
+                let splittedCommand = curr_line_upper.split(" ");
+                // console.log("the device is "+splittedCommand[2].toLowerCase());
+                let deviceName = splittedCommand[2].toLowerCase();
+                let apiResponse = addDeviceApi.addDevice(deviceName);
+                apiResponse.then(res => {
+                        // console.log(message);
+                        if(res.status == "Success!") {
+                        let deviceAdded = res.device_added.toLowerCase();
+                        term.prompt(`Device added: ${deviceAdded}`);
+                        } 
+                        
+                        if(res.status == "Failure!"){
+                            term.prompt(`Can not add device: ${deviceName}, either it exists or the API is not running.`);
+                        }
+                    })
+            }
+            if(curr_line_upper.startsWith("TASK")) {
+                let splittedCommand = curr_line_upper.split(" ");
+                console.log("The device is: " + splittedCommand[1].toLowerCase() + " and the task is: " + splittedCommand[2].toLowerCase);
+                let device = splittedCommand[1].toLowerCase();
+                let task = splittedCommand[2].toLowerCase();
+                let status = taskApi.preformTask(device, task);
+                status.then( message => {
+                    console.log(message);
+                    term.prompt(message);
                 })
             }
-            
+            if(curr_line_upper.startsWith("REMOVE")) {
+                let splittedCommand = curr_line_upper.split(" ");
+                let deviceToRemove = splittedCommand[1].toLowerCase();
+                let apiResponse = removeDeviceApi.remove(deviceToRemove);
+                apiResponse.then(res => {
+                    console.log(res)
+                    if(res.status == "Success!") {
+                        let deviceRemoved = message.device_removed;
+                        term.prompt(`device_removed: ${deviceRemoved}`);
+                    } 
+                    if(res.status == "Failure!") {
+                        term.prompt(`Can not remove device: ${deviceToRemove}, either it does not exist or the API is not running.`)
+                    }
+                })
 
+            }
             currPos = entries.length - 1;
             term.prompt();
         } else {

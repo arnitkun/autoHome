@@ -7,7 +7,7 @@ function addDevice(name) {
     return fetch(add_device_url, {method: 'POST', body: JSON.stringify(reqOb), headers: { 'Content-Type': 'application/json' } })
     .then(res => res.json())
     .then(body=>{
-        console.log(body)
+        // console.log(body)
         return body;
     })
     .catch(err => {

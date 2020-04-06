@@ -6,7 +6,7 @@ var cors = require('cors');
 //List of devices in the system
 var devices = [];
 
-router.use(cors())
+router.use(cors());
 
 function isAdded(device) {
   if(!devices.includes(device)) {
@@ -38,7 +38,7 @@ router.get('/list', function(req,res, next) {
 });
 
 
-router.post('/add', function(req, res, next) {
+router.post('/add', cors(), function(req, res, next) {
   let device_name = req.body.device_name;
   if(isAdded(device_name) == true){
     res.header('Content-Type','application/json');

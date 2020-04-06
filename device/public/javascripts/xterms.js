@@ -170,7 +170,7 @@ term.prompt = (message = "") => {
     term.write('\r' + message + '\r\n\u001b[32mautoHome> \u001b[37m');
 };
 
-term.write('Welcome to Home automation!');
+term.write('Welcome to Home automation!\n\rFor a list of commands, type help');
 term.prompt();
 
 term.on('key', function(key, ev) {

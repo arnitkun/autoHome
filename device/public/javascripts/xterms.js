@@ -14,69 +14,151 @@ var entries = [];
 var currPos = 0;
 var pos = 0;
 
+
+/**
+ * Returns a list of commands
+ * @param {String} command 
+ */
+function handleList(command) {
+    let splittedCommand = command.split(" ");
+    if(splittedCommand.length == 1) {
+        let deviceList = devices.listDevices();
+            deviceList.then( dlist => {
+                console.log(dlist);
+                term.prompt(dlist);
+        });
+    } else {
+        term.write("\n\rUnknown command. Did you mean \"list\"?");
+    }
+}
+
+/**
+ * Checks if /device route is working
+ * @param {String} command 
+ */
+function handleTest(command) {
+    let splittedCommand = command.split(" ");
+    if(splittedCommand.length == 1){
+        let status = testDeviceApi.testDeviceApi();
+            status.then( message => {
+                console.log(message);
+                term.prompt(message);
+            });
+    } else {
+        term.write("\n\rUnknown command. Did you mean \"test\"?");
+    }
+}
+
+/**
+ * Example: add <device>, device name can not contain whitespaces, only the first argument 
+ * after add is parsed as device name.
+ * @param {String} command 
+ */
+function handleAdd(command) {
+    let splittedCommand = command.split(" ");
+        // console.log("the device is "+splittedCommand[2].toLowerCase());
+        let deviceName = splittedCommand[1].toLowerCase();
+        let apiResponse = addDeviceApi.addDevice(deviceName);
+        apiResponse.then(res => {
+            // console.log(message);
+            if(res.status == "Success!") {
+            let deviceAdded = res.device_added.toLowerCase();
+            term.prompt(`Device added: ${deviceAdded}`);
+            } 
+            
+            if(res.status == "Failure!"){
+                    term.prompt(`Can not add device: ${deviceName}, either it exists or the API is not running.`);
+            }
+        })
+}
+
+/**
+ * Example: task <device> <task>. Arguments can not contain whitespaces.
+ * @param {String} command 
+ */
+function handleTask(command) {
+    let splittedCommand = command.split(" ");
+        console.log("The device is: " + splittedCommand[1].toLowerCase() + " and the task is: " + splittedCommand[2].toLowerCase);
+        let device = splittedCommand[1].toLowerCase();
+        let task = splittedCommand[2].toLowerCase();
+        let status = taskApi.preformTask(device, task);
+        status.then( message => {
+            console.log(message);
+            term.prompt(message);
+        });
+}
+
+/**
+ * Removes one device from list.
+ * Format: remove <device>, only the first argument is used as device name, rest is discarded.
+ * @param {String} command 
+ */
+function handleRemove(command) {
+    let splittedCommand = command.split(" ");
+        let deviceToRemove = splittedCommand[1].toLowerCase();
+        let apiResponse = removeDeviceApi.remove(deviceToRemove);
+        apiResponse.then(res => {
+            console.log(res)
+            if(res.status == "Success!") {
+                 let deviceRemoved = res.device_removed;
+                 term.prompt(`device_removed: ${deviceRemoved}`);
+            } 
+            if(res.status == "Failure!") {
+                term.prompt(`Can not remove device: ${deviceToRemove}, either it does not exist or the API is not running.`)
+            }
+        });
+}
+
+/**
+ * Returns list of all available commands.
+ */
+function handlehelp() {
+    term.write("\n\rList of avaiable commands: ");
+    term.write("\r\n1. add: Adds ONE device. Example: add bulb");
+    term.write("\n\r2. list: Lists all available devices. Example: List");
+    term.write("\n\r3. remove: removes ONE device. Example: remove bulb");
+    term.write("\n\r4. task: makes devices perform task. Example: task bulb on");
+    term.write("\n\r For an in-depth explanation, check the readme at https://github.com/arnitkun/autoHome/blob/master/README.md");
+}
+
 /**
  * Parses the command all calls the appropriate handler for the command
  * @param {string} command command typed in the terminal
  */
 function parse(command) {
+    
     command = command.toUpperCase();
-            if(command == "LIST DEVICES") {
-                let deviceList = devices.listDevices();
-                deviceList.then( dlist => {
-                    console.log(dlist);
-                    term.prompt(dlist);
-                })
-            }
-            if(command == "TEST") {
-                let status = testDeviceApi.testDeviceApi();
-                status.then( message => {
-                    console.log(message);
-                    term.prompt(message);
-                });
-            }
-            if(command.startsWith("ADD DEVICE")) {
-                let splittedCommand = command.split(" ");
-                // console.log("the device is "+splittedCommand[2].toLowerCase());
-                let deviceName = splittedCommand[2].toLowerCase();
-                let apiResponse = addDeviceApi.addDevice(deviceName);
-                apiResponse.then(res => {
-                        // console.log(message);
-                        if(res.status == "Success!") {
-                        let deviceAdded = res.device_added.toLowerCase();
-                        term.prompt(`Device added: ${deviceAdded}`);
-                        } 
-                        
-                        if(res.status == "Failure!"){
-                            term.prompt(`Can not add device: ${deviceName}, either it exists or the API is not running.`);
-                        }
-                    })
-            }
-            if(command.startsWith("TASK")) {
-                let splittedCommand = command.split(" ");
-                console.log("The device is: " + splittedCommand[1].toLowerCase() + " and the task is: " + splittedCommand[2].toLowerCase);
-                let device = splittedCommand[1].toLowerCase();
-                let task = splittedCommand[2].toLowerCase();
-                let status = taskApi.preformTask(device, task);
-                status.then( message => {
-                    console.log(message);
-                    term.prompt(message);
-                })
-            }
-            if(command.startsWith("REMOVE")) {
-                let splittedCommand = command.split(" ");
-                let deviceToRemove = splittedCommand[2].toLowerCase();
-                let apiResponse = removeDeviceApi.remove(deviceToRemove);
-                apiResponse.then(res => {
-                    console.log(res)
-                    if(res.status == "Success!") {
-                        let deviceRemoved = res.device_removed;
-                        term.prompt(`device_removed: ${deviceRemoved}`);
-                    } 
-                    if(res.status == "Failure!") {
-                        term.prompt(`Can not remove device: ${deviceToRemove}, either it does not exist or the API is not running.`)
-                    }
-                })
-            }
+    let splittedCommand = command.split(" ");
+
+    switch(splittedCommand[0]) {
+        case ("LIST"):
+            handleList(command);
+            break;
+        case ("TEST"):
+            handleTest(command);
+            break;
+
+        case ("ADD"):
+            handleAdd(command);
+            break;
+
+        case ("TASK"):
+            handleTask(command);
+            break;
+        
+        case ("REMOVE"):
+            handleRemove(command);
+            break;
+
+        case ("HELP"):
+            handlehelp();
+            break;
+
+        default:
+                term.write("\n\rUnknown command. Type help for a list of commands.");
+                break;
+    }
+
 }
 
 

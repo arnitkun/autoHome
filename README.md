@@ -2,6 +2,8 @@
 
 A prototype REST-ful Home Automation system to remotely control devices at home, built in javascript. Runs in the browser.
 
+![Screenshot](./autoHome.PNG "AutoHome")
+
 # Overview
 
 AutoHome provides the following functionality:

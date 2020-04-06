@@ -15,6 +15,8 @@ AutoHome provides the following functionality:
 
 **Note:** Currently the system is not persistent i.e. if you refresh your browser, all data is lost. The data only lasts for the session.
 
+Conversely speaking, you can just refresh your browser to reset the system :D
+
 ## Installation
 
 ### Using docker-compose [Recommended]
@@ -75,3 +77,15 @@ The web console supports these basic commands:
 5. ```test```: Returns a string if the automation system is online.
     Syntax: ```test```
 6. ```help```: Prints in-console help.
+
+## Note:
+
+As the application is built on windows machine, there is a chance that the web-console may not start at the IP address as programmed into 
+the command handlers. They can be changed from ```192.168.99.100``` to ```localhost``` in the following files:
+
+1. ```device/public/javascripts/addDevice.js```
+2. ```device/public/javascripts/createTask.js```
+3. ```device/public/javascripts/listDevices.js```
+4. ```device/public/javascripts/removeDevices.js```
+5. ```device/utils/test.js```
+6. ```device/test/test-e2e.js```

@@ -85,7 +85,7 @@ router.put('/task',function(req,res,next) {
     res.send(resOb);
   } else {
     res.header('Content-Type','application/json');
-    res.send({"status" : "Failure!"})
+    res.send({"status" : "Failure! The device does not exist."})
   }
   
 });

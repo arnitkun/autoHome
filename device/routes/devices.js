@@ -26,6 +26,14 @@ function isRemoved(device) {
   }
 }
 
+function didTask(device) {
+  if(devices.includes(device)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 //checks the status of /device route
 router.get('/', function(req,res, next) {
   res.send({message:"Please specify a task."});
@@ -68,12 +76,18 @@ router.post('/remove', function(req,res, next) {
 router.put('/task',function(req,res,next) {
   let task = req.body.task;
   let device = req.body.device;
-  res.header('Content-Type','application/json');
-  let resOb = {
-    "device": device,
-    "action_performed": task
+  if(didTask(device) == true) {
+    res.header('Content-Type','application/json');
+    let resOb = {
+      "device": device,
+      "action_performed": task
+    }
+    res.send(resOb);
+  } else {
+    res.header('Content-Type','application/json');
+    res.send({"status" : "Failure!"})
   }
-  res.send(resOb);
+  
 });
 
 module.exports = router;

@@ -68,7 +68,7 @@ The web console supports these basic commands:
 
 1. ``list``: Lists all the devices currently available in the automation system.
     Syntax: ```list```
-2. ```add``: Adds a single device to the automation system. The name must not contain whitespace.
+2. ```add```: Adds a single device to the automation system. The name must not contain whitespace.
     Syntax: ```add <name of device>```
 3. ```task```: Creates task for a device. The task can not have whitespaces.
     Syntax: ```task <device_name> <task>```

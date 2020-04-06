@@ -10,7 +10,7 @@ RUN npm install browserify -g
 
 COPY . .
 
-RUN  mkdir public/build
+# RUN  mkdir public/build
 
 RUN browserify public/javascripts/listDevice.js --standalone listDevices > public/build/list.js
 

@@ -7,7 +7,7 @@ var fetch = require('node-fetch');
  */
 function preformTask(device, task) {
     console.log(`Console log: ${device} will ${task}`);
-    create_task_url = 'http://localhost:3000/devices/task';
+    create_task_url = 'http://192.168.99.100:3000/devices/task';
     let reqOb = {"task": task,
                  "device": device}
     return fetch(create_task_url, {method: 'PUT', body: JSON.stringify(reqOb), headers: { 'Content-Type': 'application/json' } })

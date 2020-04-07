@@ -7,7 +7,7 @@ var fetch = require('node-fetch');
  */
 function addDevice(name) {
     console.log("adding " + name)
-    add_device_url = 'http://192.168.99.100:3000/devices/add';
+    add_device_url = 'http://localhost:3000/devices/add';
     let reqOb = {"device_name": name}
     return fetch(add_device_url, {method: 'POST', body: JSON.stringify(reqOb), headers: { 'Content-Type': 'application/json' } })
     .then(res => res.json())

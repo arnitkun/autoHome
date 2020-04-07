@@ -2,7 +2,7 @@ var chai = require('chai');
 var chaiHttp = require('chai-http');
 var expect = chai.expect;
 
-var server = 'http://192.168.99.100:3000/devices'
+var server = 'http://localhost:3000/devices'
 
 chai.use(chaiHttp);
 

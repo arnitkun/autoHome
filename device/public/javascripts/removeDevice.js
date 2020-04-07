@@ -5,7 +5,7 @@ var fetch = require("node-fetch");
  * @param {String} name name of device to be removed 
  */
 function remove(name) {
-    const remove_device_url = 'http://192.168.99.100:3000/devices/remove';
+    const remove_device_url = 'http://localhost:3000/devices/remove';
     console.log("removing " + name);
     let reqOb = {"device": name}
     return fetch(remove_device_url, {method: 'POST', body: JSON.stringify(reqOb), headers: { 'Content-Type': 'application/json' } })

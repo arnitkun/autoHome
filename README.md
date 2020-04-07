@@ -22,6 +22,7 @@ Conversely speaking, you can just refresh your browser to reset the system :D
 ### Using docker-compose [Recommended]
 
 1. Clone this repository.
+2. For macOS ```git checkout macOS```, use master branch for windows.
 2. Run ```docker-compose up``` from the root directory.
 3. From your browser, go to ```http://192.168.99.100:3000/```, this is where the application console exists.
 
@@ -80,12 +81,6 @@ The web console supports these basic commands:
 
 ## Note:
 
-As the application is built on windows machine, there is a chance that the web-console may not start at the IP address as programmed into 
-the command handlers. They can be changed from ```192.168.99.100``` to ```localhost``` in the following files:
-
-1. ```device/public/javascripts/addDevice.js```
-2. ```device/public/javascripts/createTask.js```
-3. ```device/public/javascripts/listDevices.js```
-4. ```device/public/javascripts/removeDevices.js```
-5. ```device/utils/test.js```
-6. ```device/test/test-e2e.js```
+As the application is built on windows machine, the master branch will work for windows, for macOS build, checkout the macOS branch and 
+run ```docker-compose up``` from the root. Manual build remains the same with the exception of changing the programmed IP from ```192.168.99.100```
+to ```localhost```.
